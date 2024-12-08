@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
-export default function HomeScreen() {
+const HomeScreen: FC = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.metricsGrid}>
@@ -13,7 +13,7 @@ export default function HomeScreen() {
       </View>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -38,3 +38,5 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
 });
+
+export default HomeScreen;
