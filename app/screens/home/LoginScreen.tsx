@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '../../../types/navigation';
 import { storeTokens } from '../../../utils/storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ApiError } from '../../../types/error';
 
 const LoginScreen: React.FC = () => {
   const navigation =
@@ -37,9 +38,10 @@ const LoginScreen: React.FC = () => {
       await storeTokens(response);
       navigation.replace('Home');
     } catch (error) {
+      const apiError = error as ApiError;
       Alert.alert(
         '로그인 실패',
-        error.response?.data?.message || '로그인에 실패했습니다.'
+        apiError.response?.data?.message || '로그인에 실패했습니다.'
       );
     } finally {
       setLoading(false);
