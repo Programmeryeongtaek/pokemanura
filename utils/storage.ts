@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthTokens } from '../types/auth';
 
-export const storeTokens = async (tokens: AuthTokens) => {
+export const storeTokens = async (tokens: AuthTokens): Promise<void> => {
   try {
     await AsyncStorage.multiSet([
       ['access_token', tokens.access_token],
