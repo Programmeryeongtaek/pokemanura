@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { loginApi } from '../../../api/auth';
 
 const LoginScreen: React.FC = () => {
   const [clientId, setClientId] = useState('');
@@ -20,9 +21,23 @@ const LoginScreen: React.FC = () => {
       return;
     }
 
-    setLoading(true);
-    // API 호출 로직 추가
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await loginApi({
+        client_id: clientId,
+        client_secret: clientSecret,
+      });
+
+      // 로그인 성공 처리
+      // 네비게이션 처리
+    } catch (error) {
+      Alert.alert(
+        '로그인 실패',
+        error.response?.data?.message || '로그인에 실패했습니다.'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
