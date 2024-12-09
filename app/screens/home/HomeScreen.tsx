@@ -47,7 +47,7 @@ const HomeScreen: React.FC = () => {
         Alert.alert('오류', '로그아웃 중 문제가 발생했습니다.');
       }
     } else {
-      navigation.navigate('login');
+      navigation.navigate('Login');
     }
   };
 
