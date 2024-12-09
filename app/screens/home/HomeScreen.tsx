@@ -18,7 +18,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 const HomeScreen: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const metrics = useMetrics();
 
   // CPU 차트 데이터
@@ -38,6 +38,19 @@ const HomeScreen: React.FC = () => {
     { id: 3, name: 'Database', status: 'warning' as const, pods: 1 },
   ];
 
+  const handleAuthAction = async () => {
+    if (isLoggedIn) {
+      try {
+        await logout();
+        Alert.alert('알림', '로그아웃되었습니다.');
+      } catch (error) {
+        Alert.alert('오류', '로그아웃 중 문제가 발생했습니다.');
+      }
+    } else {
+      navigation.navigate('login');
+    }
+  };
+
   const handleScaleService = (serviceId: number) => {
     if (!isLoggedIn) {
       Alert.alert('알림', '이 기능은 로그인 후 사용할 수 있습니다.');
@@ -50,10 +63,7 @@ const HomeScreen: React.FC = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>시스템 모니터링</Text>
-        <TouchableOpacity
-          style={styles.authButton}
-          onPress={() => navigation.navigate('Login')}
-        >
+        <TouchableOpacity style={styles.authButton} onPress={handleAuthAction}>
           <Text style={styles.authButtonText}>
             {isLoggedIn ? '로그아웃' : '로그인'}
           </Text>
