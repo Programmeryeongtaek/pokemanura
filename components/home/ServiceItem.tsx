@@ -5,6 +5,7 @@ interface ServiceItemProps {
   status: 'active' | 'warning';
   pods: number;
   onScale: () => void;
+  disabled?: boolean;
 }
 
 export const ServiceItem: React.FC<ServiceItemProps> = ({
@@ -12,6 +13,7 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
   status,
   pods,
   onScale,
+  disabled = false,
 }) => {
   return (
     <View style={styles.container}>
