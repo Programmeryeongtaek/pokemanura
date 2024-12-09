@@ -38,15 +38,24 @@ const LoginScreen: React.FC = () => {
         client_secret: clientSecret,
       });
 
-      await storeTokens(response);
-      setIsLoggedIn(true);
-      navigation.replace('Home');
+      console.log('Raw API Response:', response); // 전체 응답 로깅
+      console.log('Token data:', {
+        // 토큰 데이터만 로깅
+        access_token: response?.access_token,
+        refresh_token: response?.refresh_token,
+        token_type: response?.token_type,
+      });
+
+      if (response?.access_token) {
+        await storeTokens(response);
+        setIsLoggedIn(true);
+        navigation.replace('Home');
+      } else {
+        Alert.alert('로그인 실패', '토큰 정보가 올바르지 않습니다.');
+      }
     } catch (error) {
-      const apiError = error as ApiError;
-      Alert.alert(
-        '로그인 실패',
-        apiError.response?.data?.message || '로그인에 실패했습니다.'
-      );
+      console.error('Login Error:', error);
+      Alert.alert('로그인 실패', '인증에 실패했습니다.');
     } finally {
       setLoading(false);
     }
