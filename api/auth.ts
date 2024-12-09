@@ -1,11 +1,10 @@
-import axios from 'axios';
+import { AuthTokens, LoginRequest } from '../types/auth';
+import { api } from './config';
 
-const API_URL = "BASE_URL";
-
-export const loginApi = async (credentials: {
-  client_id: string;
-  client_secret: string;
-}) => {
-  const response = await axios.post(`${API_URL}/login`, credentials)
-  return response.data;
-}
+export const loginApi = async (credentials: LoginRequest): Promise<AuthTokens> => {
+  try {
+    const response = await api.post<AuthTokens>('/login', credentials);
+    return response.data;
+  } catch (error) {
+    throw new Error('Login failed');
+  }}
