@@ -1,11 +1,12 @@
-import React, { FC } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useMetrics } from '../../../hooks/useMetrics';
 import { MetricCard } from '../../../components/home/MetricCard';
 import { CPUChart } from '../../../components/home/CPUChart';
 import { ServiceItem } from '../../../components/home/ServiceItem';
+import { useAuth } from '../../../contexts/AuthContext';
 
-const HomeScreen: FC = () => {
+const HomeScreen: React.FC = () => {
+  const { isLoggedIn } = useAuth();
   const metrics = useMetrics();
 
   // CPU 차트 데이터
@@ -26,11 +27,23 @@ const HomeScreen: FC = () => {
   ];
 
   const handleScaleService = (serviceId: number) => {
+    if (!isLoggedIn) {
+      Alert.alert('알림', '이 기능은 로그인 후 사용할 수 있습니다.');
+      return;
+    }
     console.log(`Scaling service with id: ${serviceId}`);
   };
 
   return (
     <ScrollView style={styles.container}>
+      {!isLoggedIn && (
+        <View style={styles.testDataBanner}>
+          <Text style={styles.testDataText}>
+            * 현재 테스트 데이터를 나타내고 있습니다.
+          </Text>
+        </View>
+      )}
+
       <View style={styles.metricsGrid}>
         <MetricCard
           icon="memory"
@@ -59,7 +72,12 @@ const HomeScreen: FC = () => {
       </View>
 
       <View style={styles.servicesSection}>
-        <Text style={styles.sectionTitle}>서비스 상태</Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>서비스 상태</Text>
+          {!isLoggedIn && (
+            <Text style={styles.testDataLabel}>테스트 데이터</Text>
+          )}
+        </View>
         {services.map((service) => (
           <ServiceItem
             key={service.id}
@@ -67,6 +85,7 @@ const HomeScreen: FC = () => {
             status={service.status}
             pods={service.pods}
             onScale={() => handleScaleService(service.id)}
+            disabled={!isLoggedIn}
           />
         ))}
       </View>
@@ -78,6 +97,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  testDataBanner: {
+    backgroundColor: '#FFF3CD',
+    padding: 12,
+    marginBottom: 8,
+  },
+  testDataText: {
+    color: '#856404',
+    textAlign: 'center',
+    fontSize: 14,
   },
   metricsGrid: {
     flexDirection: 'row',
@@ -96,10 +125,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 12,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
+  },
+  testDataLabel: {
+    fontSize: 12,
+    color: '#856404',
+    backgroundColor: '#FFF3CD',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
   },
 });
 
