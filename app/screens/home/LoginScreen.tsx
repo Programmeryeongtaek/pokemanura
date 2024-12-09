@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -10,6 +12,18 @@ import {
 const LoginScreen: React.FC = () => {
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!clientId || !clientSecret) {
+      Alert.alert('입력 정보가 올바르지 않습니다', '모든 필드를 입력해주세요.');
+      return;
+    }
+
+    setLoading(true);
+    // API 호출 로직 추가
+    setLoading(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -20,6 +34,7 @@ const LoginScreen: React.FC = () => {
         value={clientId}
         onChangeText={setClientId}
         autoCapitalize="none"
+        editable={!loading}
       />
       <TextInput
         style={styles.input}
@@ -28,9 +43,18 @@ const LoginScreen: React.FC = () => {
         onChangeText={setClientSecret}
         secureTextEntry
         autoCapitalize="none"
+        editable={!loading}
       />
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.buttonText}>로그인</Text>
+      <TouchableOpacity
+        style={[styles.loginButton, loading && styles.loginButtonDisabled]}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="white" />
+        ) : (
+          <Text style={styles.buttonText}>로그인</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -67,6 +91,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  loginButtonDisabled: {
+    opacity: 0.7,
   },
 });
 
