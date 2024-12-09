@@ -1,11 +1,23 @@
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { useMetrics } from '../../../hooks/useMetrics';
 import { MetricCard } from '../../../components/home/MetricCard';
 import { CPUChart } from '../../../components/home/CPUChart';
 import { ServiceItem } from '../../../components/home/ServiceItem';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../types/navigation';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const HomeScreen: React.FC = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { isLoggedIn } = useAuth();
   const metrics = useMetrics();
 
@@ -36,6 +48,18 @@ const HomeScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>시스템 모니터링</Text>
+        <TouchableOpacity
+          style={styles.authButton}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.authButtonText}>
+            {isLoggedIn ? '로그아웃' : '로그인'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       {!isLoggedIn && (
         <View style={styles.testDataBanner}>
           <Text style={styles.testDataText}>
@@ -97,6 +121,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  authButton: {
+    padding: 8,
+  },
+  authButtonText: {
+    color: '#007AFF',
+    fontSize: 16,
   },
   testDataBanner: {
     backgroundColor: '#FFF3CD',
