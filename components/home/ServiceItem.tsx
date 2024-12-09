@@ -22,16 +22,25 @@ export const ServiceItem: React.FC<ServiceItemProps> = ({
         <View
           style={[
             styles.statusDot,
-            {
-              backgroundColor: status === 'active' ? '#4CAF50' : '#FFC107',
-            },
+            { backgroundColor: status === 'active' ? '#4CAF50' : '#FFC107' },
           ]}
         />
       </View>
       <View style={styles.podInfo}>
         <Text style={styles.podCount}>Pods: {pods}</Text>
-        <TouchableOpacity style={styles.scaleButton} onPress={onScale}>
-          <Text style={styles.scaleButtonText}>Scale</Text>
+        <TouchableOpacity
+          style={[styles.scaleButton, disabled && styles.scaleButtonDisabled]}
+          onPress={onScale}
+          disabled={disabled}
+        >
+          <Text
+            style={[
+              styles.scaleButtonText,
+              disabled && styles.scaleButtonTextDisabled,
+            ]}
+          >
+            Scale
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -74,8 +83,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 6,
   },
+  scaleButtonDisabled: {
+    backgroundColor: '#ccc',
+  },
   scaleButtonText: {
     color: 'white',
     fontSize: 14,
+  },
+  scaleButtonTextDisabled: {
+    color: '#666',
   },
 });
