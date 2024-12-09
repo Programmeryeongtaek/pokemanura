@@ -9,8 +9,14 @@ import {
   View,
 } from 'react-native';
 import { loginApi } from '../../../api/auth';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps, RootStackParamList } from '../../../types/navigation';
+import { storeTokens } from '../../../utils/storage';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const LoginScreen: React.FC = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList, 'Login'>>();
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,8 +34,8 @@ const LoginScreen: React.FC = () => {
         client_secret: clientSecret,
       });
 
-      // 로그인 성공 처리
-      // 네비게이션 처리
+      await storeTokens(response);
+      navigation.replace('Home');
     } catch (error) {
       Alert.alert(
         '로그인 실패',
