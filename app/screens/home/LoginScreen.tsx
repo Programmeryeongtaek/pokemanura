@@ -14,6 +14,7 @@ import { NavigationProps, RootStackParamList } from '../../../types/navigation';
 import { storeTokens } from '../../../utils/storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ApiError } from '../../../types/error';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const LoginScreen: React.FC = () => {
   const navigation =
@@ -21,6 +22,8 @@ const LoginScreen: React.FC = () => {
   const [clientId, setClientId] = useState('');
   const [clientSecret, setClientSecret] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const { setIsLoggedIn } = useAuth();
 
   const handleLogin = async () => {
     if (!clientId || !clientSecret) {
@@ -36,6 +39,7 @@ const LoginScreen: React.FC = () => {
       });
 
       await storeTokens(response);
+      setIsLoggedIn(true);
       navigation.replace('Home');
     } catch (error) {
       const apiError = error as ApiError;
