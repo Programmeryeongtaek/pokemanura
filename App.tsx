@@ -11,20 +11,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ title: '홈' }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ title: '로그인' }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <MainNavigator />
     </AuthProvider>
   );
 }
