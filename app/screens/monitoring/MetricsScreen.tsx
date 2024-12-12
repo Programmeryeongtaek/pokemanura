@@ -7,9 +7,44 @@ import {
 } from 'react-native';
 import { useMetricsData } from '../../../hooks/useMetricsData';
 import { MetricsChart } from '../../../components/Metrics/MetricsChart';
+import { useEffect, useState } from 'react';
+import { TimeSeriesDataPoint } from '../../../types/metrics';
+
+const MAX_HISTORY_POINTS = 10; // 최대 데이터 포인트 수
 
 const MetricsScreen = () => {
   const { metrics, loading, error } = useMetricsData();
+  // 히스토리 데이터 상태 추가
+  const [history, setHistory] = useState({
+    cpu: [] as TimeSeriesDataPoint[],
+    memory: [] as TimeSeriesDataPoint[],
+    services: [] as TimeSeriesDataPoint[],
+  });
+
+  // metrics가 업데이트될 때마다 히스토리 데이터 추가
+  useEffect(() => {
+    if (metrics) {
+      const timestamp = new Date().toLocaleTimeString('ko-KR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+
+      setHistory((prev) => ({
+        cpu: [...prev.cpu, { timestamp, value: metrics.cpu_usage }].slice(
+          -MAX_HISTORY_POINTS
+        ),
+        memory: [
+          ...prev.memory,
+          { timestamp, value: metrics.memory_usage },
+        ].slice(-MAX_HISTORY_POINTS),
+        services: [
+          ...prev.services,
+          { timestamp, value: metrics.active_services },
+        ].slice(-MAX_HISTORY_POINTS),
+      }));
+    }
+  }, [metrics]);
 
   if (loading && !metrics) {
     return (
@@ -28,12 +63,6 @@ const MetricsScreen = () => {
     );
   }
 
-  // 현재 시간을 기준으로 타임스탬프 생성
-  const timestamp = new Date().toLocaleTimeString('ko-KR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
   return (
     <ScrollView style={styles.container}>
       {loading && (
@@ -46,17 +75,17 @@ const MetricsScreen = () => {
         <>
           <MetricsChart
             title="CPU Usage (%)"
-            data={[{ timestamp, value: metrics.cpu_usage }]}
+            data={history.cpu}
             color="rgba(0, 122, 255, 1)"
           />
           <MetricsChart
             title="Memory Usage (%)"
-            data={[{ timestamp, value: metrics.memory_usage }]}
+            data={history.memory}
             color="rgba(75, 192, 192, 1)"
           />
           <MetricsChart
             title="Active Services"
-            data={[{ timestamp, value: metrics.active_services }]}
+            data={history.services}
             color="rgba(255, 159, 64, 1)"
           />
         </>
