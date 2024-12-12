@@ -1,12 +1,12 @@
-import { MetricsTimeSeriesData } from '../types/metrics';
+import { MetricsResponse } from '../types/api';
 import { api } from './config';
 
-export const fetchMetricsData = async (): Promise<MetricsTimeSeriesData> => {
+export const fetchMetricsData = async (): Promise<MetricsResponse> => {
   try {
-    const response = await api.get('/metrics');
+    const response = await api.get<MetricsResponse>('/metrics');
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch metrics data:', error);
+    console.error('Failed to fetch metrics:', error);
     throw error;
   }
 };
