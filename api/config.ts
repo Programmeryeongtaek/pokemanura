@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = 'https://1666e8fc-a58f-47ca-970c-9107006eae14.mock.pstmn.io';
+export const BASE_URL = 'https://cdc1f545-da3c-449f-baba-837b6ab4d3c1.mock.pstmn.io';
 
 export const api = axios.create({
   baseURL: BASE_URL,
