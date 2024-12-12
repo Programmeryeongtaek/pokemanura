@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/home/HomeScreen';
 import MetricsScreen from '../screens/monitoring/MetricsScreen';
 import StatusScreen from '../screens/status/StatusScreen';
-import ServiceListScreen from '../screens/management/ServiceListScreen';
+import ManagementScreen from '../screens/management/ManagementScreen';
 import LoginScreen from '../screens/home/LoginScreen';
 
 const Tab = createBottomTabNavigator();
@@ -74,7 +74,7 @@ const TabScreens = () => {
       />
       <Tab.Screen
         name="Management"
-        component={ServiceListScreen}
+        component={ManagementScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="settings" size={24} color={color} />
